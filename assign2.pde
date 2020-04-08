@@ -1,19 +1,265 @@
+//gmaeState
+final int GAME_START = 0;
+final int GAME_RUN = 1;
+final int GAME_LOSE = 2;
+int gameState = 0; 
+
+//game
+PImage title;
+PImage gameover;
+PImage startNormal;
+PImage startHovered;
+PImage restartNormal;
+PImage restartHovered;
+int ButtonX = 248;
+int ButtonY = 360;
+int ButtonW = 144;
+int ButtonH = 60;
+
+//base
+PImage skyImg;
+PImage soilImg;
+
+//life
+PImage lifeImg;
+int lifeCount=2;
+
+//life cabbage 
+PImage cabbageImg;
+int cabbageX = floor(random(8))*80;
+int cabbageY = floor(random(4))*80+160;
+int cW = 80; //cabbage width
+int cH = 80; //cabbage height
+
+//groundhog
+PImage groundhogIdle;
+PImage groundhogDown;
+PImage groundhogLeft;
+PImage groundhogRight;
+int groundhogX = 320;
+int groundhogY = 80;
+int gW=80; //groundhog width
+int gH=80; //groundhog height
+
+//time
+int nowTime;
+int lastTime;
+
+//boolean
+boolean downPressed=false;
+boolean leftPressed=false;
+boolean rightPressed=false;
+
+//solder
+PImage soldierImg;
+int solderX;
+int solderY;
+int solderSpeed;
+int sW=80; //solder width
+int sH=80; //solder height
+
 void setup() {
-	size(640, 480, P2D);
-	// Enter Your Setup Code Here
+  
+  size(640, 480, P2D);
+  
+  skyImg=loadImage("img/bg.jpg"); 
+  soilImg=loadImage("img/soil.png");
+  lifeImg=loadImage("img/life.png");
+  cabbageImg=loadImage("img/cabbage.png");
+  
+  //groundhog
+  groundhogDown=loadImage("img/groundhogDown.png");
+  groundhogIdle=loadImage("img/groundhogIdle.png");
+  groundhogLeft=loadImage("img/groundhogLeft.png");
+  groundhogRight=loadImage("img/groundhogRight.png");
+ 
+  //solder
+  soldierImg=loadImage("img/soldier.png");
+  solderX=0;
+  solderY=160+floor(random(4))*80;
+  solderSpeed=2;
+  
+  //game
+  title=loadImage("img/title.jpg");
+  gameover=loadImage("img/gameover.jpg");
+  startNormal=loadImage("img/startNormal.png");
+  startHovered=loadImage("img/startHovered.png");
+  restartNormal=loadImage("img/restartNormal.png");
+  restartHovered=loadImage("img/restartHovered.png");
+
 }
 
+
 void draw() {
-	// Switch Game State
-		// Game Start
-
-		// Game Run
-
-		// Game Lose
+ switch(gameState){   
+  case GAME_START:
+   
+   image(title,0,0);
+   image(startNormal,ButtonX,ButtonY);
+   if(mouseX >= ButtonX && mouseX <= ButtonX+ButtonW){
+     if(mouseY >= ButtonY && mouseY <= ButtonY+ButtonH){
+       image(startHovered,ButtonX,ButtonY);
+       if(mousePressed){
+         gameState = GAME_RUN;
+       }
+      }
+    }
+   break;
+   
+   
+  case GAME_RUN:
+     
+     image(skyImg,0,0); //sky
+     image(soilImg,0,160); //ground
+     image(cabbageImg,cabbageX,cabbageY); //cabbage
+     
+     if(groundhogX+gW > cabbageX && groundhogX < cabbageX+cW){
+        if(groundhogY+gH > cabbageY && groundhogY < cabbageY+cH ){ 
+          cabbageX=-80;
+          cabbageY=-80;
+          lifeCount+=1;
+        }
+     }
+     
+     //heart
+     if(lifeCount==3){
+       image(lifeImg,10,10); //1heart
+       image(lifeImg,80,10); //2heart
+       image(lifeImg,150,10); //3heart
+     }
+     if(lifeCount==2){
+       image(lifeImg,10,10); //1heart
+       image(lifeImg,80,10); //2heart
+     }
+     if(lifeCount==1){
+       image(lifeImg,10,10); //1heart
+     }
+     
+        
+     //grass
+     fill(124,204,25);
+     noStroke();
+     rect(0,145,640,15);
+    
+     //sun
+     stroke(255,255,0);
+     strokeWeight(5);
+     fill(253,184,19);
+     ellipse(590,50,120,120);
+    
+    //groundhog side
+     if(groundhogX <= 0){
+       groundhogX=0;
+     }
+     if(groundhogX >= width-80){
+       groundhogX=width-80;
+     }
+     if(groundhogY > height-80){
+       groundhogY=height-80;
+     }
+     
+     //groundhog moving
+     if(downPressed){
+       image(groundhogDown,groundhogX,groundhogY);
+     }
+     else if(leftPressed){
+       image(groundhogLeft,groundhogX,groundhogY);
+     }
+     else if(rightPressed){
+       image(groundhogRight,groundhogX,groundhogY);
+     }
+     else{
+       image(groundhogIdle,groundhogX,groundhogY);
+     }
+     
+      //solder
+     image(soldierImg,solderX,solderY); 
+     solderX+=solderSpeed;
+        if(solderX == width){
+         solderX=-80;
+         solderX+=solderSpeed;
+        } 
+     
+     //when game lose
+     if(groundhogX+gW > solderX && groundhogX < solderX+sW){
+        if(groundhogY+gH > solderY && groundhogY < solderY+sH ){ 
+          groundhogX = 320;
+          groundhogY = 80;
+          lifeCount-=1;
+          if(lifeCount==0){
+            gameState = GAME_LOSE;
+          }
+        }
+     }
+   break;
+       
+       
+       
+   case GAME_LOSE:
+   lifeCount=2;
+   cabbageX = floor(random(8))*80;
+   cabbageY = floor(random(4))*80+160;
+   image(gameover,0,0);
+   image(restartNormal,ButtonX,ButtonY);
+   if(mouseX >= ButtonX && mouseX <= ButtonX+ButtonW){
+     if(mouseY >= ButtonY && mouseY <= ButtonY+ButtonH){
+       image(restartHovered,ButtonX,ButtonY);
+       if(mousePressed){
+         gameState = GAME_RUN;
+       }
+      }
+    }
+   break; 
+  }
 }
 
 void keyPressed(){
+  nowTime = millis(); 
+  if(key==CODED){
+    switch(keyCode){
+      case DOWN:
+      if(nowTime - lastTime > 250){
+         downPressed=true;
+         lastTime = millis();
+         groundhogY+=80;
+       }
+      break;
+      
+      case LEFT:
+      if(nowTime - lastTime > 250){
+         leftPressed=true;
+         lastTime = millis();
+         groundhogX-=80;
+      }
+      break;
+      
+      case RIGHT:
+      if(nowTime - lastTime > 250){
+         rightPressed=true;
+         lastTime = millis();
+         groundhogX+=80;
+      }     
+      break;
+    }
+ }
 }
-////////
+
+
 void keyReleased(){
+  if(key==CODED){
+    switch(keyCode){
+      case DOWN:
+      downPressed=false;
+      break;
+      
+      case LEFT:
+      leftPressed=false;
+      break;
+      
+      case RIGHT:
+      rightPressed=false;
+      break;
+     }
+ }
+ 
 }
