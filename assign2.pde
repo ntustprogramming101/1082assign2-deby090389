@@ -20,6 +20,7 @@ int ButtonH = 60;
 PImage skyImg;
 PImage soilImg;
 
+
 //life
 PImage lifeImg;
 int lifeCount=2;
@@ -50,13 +51,13 @@ boolean downPressed=false;
 boolean leftPressed=false;
 boolean rightPressed=false;
 
-//solder
+//soldier
 PImage soldierImg;
-int solderX;
-int solderY;
-int solderSpeed;
-int sW=80; //solder width
-int sH=80; //solder height
+int soldierX;
+int soldierY;
+int soldierSpeed;
+int sW=80;//soldier width
+int sH=80;//soldier height
 
 void setup() {
   
@@ -73,11 +74,11 @@ void setup() {
   groundhogLeft=loadImage("img/groundhogLeft.png");
   groundhogRight=loadImage("img/groundhogRight.png");
  
-  //solder
+  //soldier
   soldierImg=loadImage("img/soldier.png");
-  solderX=0;
-  solderY=160+floor(random(4))*80;
-  solderSpeed=2;
+  soldierX=-80;
+  soldierY=160+floor(random(4))*80;
+  soldierSpeed=2;
   
   //game
   title=loadImage("img/title.jpg");
@@ -172,17 +173,17 @@ void draw() {
        image(groundhogIdle,groundhogX,groundhogY);
      }
      
-      //solder
-     image(soldierImg,solderX,solderY); 
-     solderX+=solderSpeed;
-        if(solderX == width){
-         solderX=-80;
-         solderX+=solderSpeed;
+      //soldier
+     image(soldierImg,soldierX,soldierY); 
+     soldierX+=soldierSpeed;
+        if(soldierX == width){
+         soldierX=-80;
+         soldierX+=soldierSpeed;
         } 
      
      //when game lose
-     if(groundhogX+gW > solderX && groundhogX < solderX+sW){
-        if(groundhogY+gH > solderY && groundhogY < solderY+sH ){ 
+     if(groundhogX+gW > soldierX && groundhogX < soldierX+sW){
+        if(groundhogY+gH > soldierY && groundhogY < soldierY+sH ){ 
           groundhogX = 320;
           groundhogY = 80;
           lifeCount-=1;
