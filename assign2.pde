@@ -19,7 +19,7 @@ int ButtonH = 60;
 //base
 PImage skyImg;
 PImage soilImg;
-
+int soil = 80;
 
 //life
 PImage lifeImg;
@@ -41,10 +41,12 @@ int groundhogX = 320;
 int groundhogY = 80;
 int gW=80; //groundhog width
 int gH=80; //groundhog height
+int groundhogMoveY;
+int groundhogMoveX;
 
 //time
-int nowTime;
-int lastTime;
+float nowTime;
+float lastTime;
 
 //boolean
 boolean downPressed=false;
@@ -161,13 +163,30 @@ void draw() {
      
      //groundhog moving
      if(downPressed){
-       image(groundhogDown,groundhogX,groundhogY);
+       if( groundhogMoveY <= groundhogY ){
+         groundhogMoveY+=80/15.0;
+         image(groundhogDown,groundhogX,groundhogMoveY);
+         nowTime = millis();
+       }else{
+         downPressed = false;
+       }
      }
      else if(leftPressed){
-       image(groundhogLeft,groundhogX,groundhogY);
+       if( groundhogMoveX>=groundhogX ){
+         groundhogMoveX-=80/15.0;
+         image(groundhogLeft,groundhogMoveX,groundhogY);
+         
+       }else{
+         leftPressed = false;
+       }
      }
      else if(rightPressed){
-       image(groundhogRight,groundhogX,groundhogY);
+       if( groundhogMoveX<=groundhogX ){
+         groundhogMoveX+=80/15.0;
+         image(groundhogRight,groundhogMoveX,groundhogY);
+       } else{
+          rightPressed = false;
+       }
      }
      else{
        image(groundhogIdle,groundhogX,groundhogY);
@@ -221,24 +240,30 @@ void keyPressed(){
       case DOWN:
       if(nowTime - lastTime > 250){
          downPressed=true;
+         groundhogMoveY = groundhogY; //start position
+         groundhogY += soil;
          lastTime = millis();
-         groundhogY+=80;
+         
        }
       break;
       
       case LEFT:
       if(nowTime - lastTime > 250){
+         groundhogMoveX = groundhogX; 
+         groundhogX -= soil;
          leftPressed=true;
          lastTime = millis();
-         groundhogX-=80;
+        
       }
       break;
       
       case RIGHT:
       if(nowTime - lastTime > 250){
-         rightPressed=true;
+         groundhogMoveX = groundhogX;
+         rightPressed = true;
+         groundhogX += soil;
          lastTime = millis();
-         groundhogX+=80;
+         
       }     
       break;
     }
