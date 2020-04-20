@@ -216,8 +216,9 @@ void draw() {
        
        
    case GAME_LOSE:
-   groundhogX = 320;
-   groundhogY = 80;
+   downPressed=false;
+   leftPressed=false;
+   rightPressed=false;
    lifeCount=2;
    cabbageX = floor(random(8))*80;
    cabbageY = floor(random(4))*80+160;
