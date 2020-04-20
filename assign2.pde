@@ -1,3 +1,5 @@
+
+
 //gmaeState
 final int GAME_START = 0;
 final int GAME_RUN = 1;
@@ -219,15 +221,17 @@ void draw() {
    downPressed=false;
    leftPressed=false;
    rightPressed=false;
-   lifeCount=2;
-   cabbageX = floor(random(8))*80;
-   cabbageY = floor(random(4))*80+160;
    image(gameover,0,0);
    image(restartNormal,ButtonX,ButtonY);
    if(mouseX >= ButtonX && mouseX <= ButtonX+ButtonW){
      if(mouseY >= ButtonY && mouseY <= ButtonY+ButtonH){
        image(restartHovered,ButtonX,ButtonY);
        if(mousePressed){
+           lifeCount=2;
+           cabbageX = floor(random(8))*80;
+           cabbageY = floor(random(4))*80+160;
+           groundhogX = 320;
+           groundhogY = 80;
          gameState = GAME_RUN;
        }
       }
@@ -237,7 +241,8 @@ void draw() {
 }
 
 void keyPressed(){
-  nowTime = millis(); 
+  if(gameState ==GAME_RUN){
+    nowTime = millis(); 
   if(key==CODED){
     switch(keyCode){
       case DOWN:
@@ -270,6 +275,7 @@ void keyPressed(){
       }     
       break;
     }
+  }
  }
 }
 
